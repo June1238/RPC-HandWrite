@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/*用于consumer端--*/
 @Data
 public class Invocation implements Serializable {
     private String interfaceName;

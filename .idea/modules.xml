@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/cxyRPC/Common/Common.iml" filepath="$PROJECT_DIR$/cxyRPC/Common/Common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cxyRPC/Consumer/Consumer.iml" filepath="$PROJECT_DIR$/cxyRPC/Consumer/Consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cxyRPC/Provider/Provider.iml" filepath="$PROJECT_DIR$/cxyRPC/Provider/Provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/RPC-HandWrite.iml" filepath="$PROJECT_DIR$/.idea/RPC-HandWrite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cxyRPC/RegisterCenter/RegisterCenter.iml" filepath="$PROJECT_DIR$/cxyRPC/RegisterCenter/RegisterCenter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cxyRPC/cxyRPC.iml" filepath="$PROJECT_DIR$/cxyRPC/cxyRPC.iml" />
+    </modules>
+  </component>
+</project>

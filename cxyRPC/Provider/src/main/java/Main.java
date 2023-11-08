@@ -27,8 +27,8 @@ public class Main {
         SingleLocalRegister("MoonLight","2.0", MoonImpl_2.class);
         start("localhost",9000);
     }
-    public static void start(String hostName,int port){
 
+    public static void start(String hostName,int port){
         //在此处启动一个tomcat服务
         Tomcat tomcat = new Tomcat();
 
@@ -88,7 +88,7 @@ public class Main {
                 ServerRegister.registerServer(interfaceNames.get(i), versions.get(i), implclazz.get(i));
             System.out.println("服务注册成功。");
         }catch (Exception e){
-            System.out.println("服务注册失败啦啊哈");
+            System.out.println("服务注册失败啦");
         }
     }
 

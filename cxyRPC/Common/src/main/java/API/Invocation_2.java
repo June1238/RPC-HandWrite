@@ -3,18 +3,27 @@ package API;
 import java.io.Serializable;
 import java.util.List;
 
-public class Invocation_2 implements Serializable {
+/*用于provider端向服务器注册时使用*/
+public class Invocation_2 implements Serializable,FlagInterface {
+    private List<Integer> weightList;
     private String interfaceName;
     private String version;
     private URL_w url_w;
     private List<String> interfaceNames;
     private List<String> versions;
+    /*single batch 只是在通信上耗时 本质的存取并无区别*/
     private List<URL_w> url_ws;
     /*选择在注册中心中直接讲逻辑写死 不从使用端获取*/
     private boolean flag;
     private boolean isBatch;
     //用于consumer抓取URL flag--检查通信标准 consumer端不进行is_batch的传递
-    public Invocation_2(String interfaceName,String version){
+
+    @Override
+    public boolean isConsumer() {
+        return true;
+    }
+
+    public Invocation_2(String interfaceName, String version){
         this.interfaceName = interfaceName;
         this.version = version;
         this.flag = false;

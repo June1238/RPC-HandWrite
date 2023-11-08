@@ -3,7 +3,6 @@ package Handler;
 import API.Invocation;
 import Register.LoadBalance;
 import Register.ServerRegister;
-import com.sun.corba.se.impl.presentation.rmi.StubInvocationHandlerImpl;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +19,14 @@ public class MyHandler extends HttpServlet {
         try
         {
             ObjectInputStream objectInputStream = new ObjectInputStream(request.getInputStream());
-            //读取反射的到的消息
+            /* 读取反射传来的对象-- readObject() */
             Invocation invocation = (Invocation) objectInputStream.readObject();
             System.out.println(invocation.getInterfaceName());
-            //得到想要得到的类
+            /*
+            * 根据对象反射得到类
+            * 根据类反射得到方法 拿到方法之后传入类实例和参数得到调用结果-- 传回(class_my.newInstance())
+            * invocation.getParameters();
+            * */
             Class class_my = ServerRegister.getClazz(invocation.getInterfaceName(),invocation.getVersion());
             System.out.println(invocation.getParameterTypes());
             //根据要求的类得到方法

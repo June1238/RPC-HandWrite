@@ -16,7 +16,7 @@ import java.util.List;
 * 无法保证数据的一致性
 * */
 public class serviceRegister {
-    //hashMap
+
     public static HashMap<String, List<URL_w>> hashMap = new HashMap<>();
     public static void add(String interfaceName,String version,URL_w url)
     {

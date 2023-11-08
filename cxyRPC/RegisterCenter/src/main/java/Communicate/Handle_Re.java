@@ -1,15 +1,14 @@
 package Communicate;
 
-import API.Invocation;
-import API.Invocation_2;
-import API.URL_w;
+import API.*;
+import LoadBalance.MyServer;
+import LoadBalance.Strategy.RandomBalance;
 import Register.RegisterServer;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
-import javax.xml.ws.spi.http.HttpHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,14 +20,44 @@ public class Handle_Re extends HttpServlet {
     public void service(ServletRequest req, ServletResponse res) {
         try {
             ObjectInputStream ois = new ObjectInputStream(req.getInputStream());
-            Invocation_2 invoke2 = (Invocation_2) ois.readObject();
-            boolean total_f = invoke2.getFlag();
+            FlagInterface invoke2 = (FlagInterface) ois.readObject();
+            boolean total_f = invoke2.isConsumer();
             if(total_f==true)
-                Register(invoke2,res);
+                BatchRegister(invoke2,res);
             else if(total_f==false)
                 ReturnURL(invoke2,res);
         }catch (Exception e){
-            System.out.println("注册中心的处理逻辑出错啦！");
+            System.out.print("注册中心的处理逻辑出错...");
+        }
+    }
+
+    public void BatchRegister(FlagInterface invocation,ServletResponse resp){
+        try{
+            String ans;
+            BatchRInvocation batchRInvocation = (BatchRInvocation)invocation;
+            RegisterServer.CreateURL2Server(batchRInvocation.getClass2Urls(),batchRInvocation.getWeightMap());
+            ans = "负载路由 批量注册成功..";
+            ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
+            oos.writeObject(ans);
+            oos.close();
+            System.out.print("服务端负载路由注册成功！！");
+        }catch (Exception e){
+            System.out.print("服务端注册失败");
+        }
+    }
+    public void ReturnURL(FlagInterface invocation,ServletResponse resp){
+        try{
+            Invocation_2 invocation2 = (Invocation_2) invocation;
+            String InvokedMethod = invocation2.getInterfaceName()+invocation2.getVersion();
+            List<MyServer> serverList = RegisterServer.GetConsumerURLS(InvokedMethod);
+            URL_w url_w = new RandomBalance().doSelect(serverList).getIp();
+            ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
+            oos.writeObject(url_w);
+            oos.close();
+            System.out.print("Consumer GET URL SUCCESS!");
+
+        }catch (Exception e){
+            System.out.print("Consumer GET URL FAILUER...");
         }
     }
     /*只是设置了单个类和网址的对应关系*/
@@ -56,6 +85,12 @@ public class Handle_Re extends HttpServlet {
     //根据消费端的需求进行消费返回
     public void ReturnURL(Invocation_2 invocation,ServletResponse resp){
         List<URL_w> url_ws = RegisterServer.getListOfURL(invocation.getInterfaceName(),invocation.getVersion());
+        /*加入负载均衡策略
+        * 轮询策略
+        * 随机策略
+        * 哈希一致性策略
+        *
+        * */
         URL_w url_w = RegisterServer.LoadBalance(url_ws);
         try{
             ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());

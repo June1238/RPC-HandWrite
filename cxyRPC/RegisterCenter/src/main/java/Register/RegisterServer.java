@@ -1,16 +1,34 @@
 package Register;
 
 import API.URL_w;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
+import LoadBalance.MyServer;
 
 //应当支持批量注册的;
 public class RegisterServer {
     public static HashMap<String, List<URL_w>> server_center = new HashMap<>();
+    public static HashMap<String,List<MyServer>> interface_serverList = new HashMap<>();
+
+    /*
+    * 使用两个hashMap来实现用户到网址 以及网址到Server Weight的映射
+    * */
+    public static void CreateURL2Server(HashMap<String,List<URL_w>> string2url,HashMap<URL_w,Integer> URL2Weight){
+        for(Map.Entry<String,List<URL_w>> entry:string2url.entrySet()){
+            List<MyServer> list = new ArrayList<>();
+            for(URL_w url_w:entry.getValue())
+            {
+                MyServer myServer = new MyServer(url_w,URL2Weight.get(url_w));
+                list.add(myServer);
+            }
+            interface_serverList.put(entry.getKey(),list);
+        }
+    }
+
+    public static List<MyServer> GetConsumerURLS(String InvokedMethod){
+        return interface_serverList.get(InvokedMethod);
+    }
 
     public static void BatchserverRegister(List<String> interfaceNames,List<String> versions,List<URL_w> url_ws) {
         for (int i = 0; i < interfaceNames.size(); i++)
